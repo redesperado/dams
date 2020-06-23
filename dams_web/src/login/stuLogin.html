@@ -1,0 +1,201 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+		<link rel="stylesheet" href="layui/css/layui.css">
+		<title>学生问卷填报登录</title>
+		<script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+        <style type="text/css">
+      		.container{
+      			width: 420px;
+      			height: 330px;
+		 		 min-height: 320px;  
+		 		 max-height: 320px;  
+		 		 position: absolute;   
+		 		 top: 0;  
+		 		 left: 0;  
+		 		 bottom: 0;  
+		 		 right: 0;  
+		 		 margin: auto;  
+		 		 padding: 20px;  
+		 		 z-index: 130;  
+		 		 border-radius: 8px;  
+		 		 background-color: #fff;  
+		 		 box-shadow: 0 3px 18px rgba(100, 0, 0, .5); 
+		 		 font-size: 16px;
+      		}
+      		.close{
+      			background-color: white;
+      			border: none;
+      			font-size: 18px;
+      			margin-left: 410px;
+      			margin-top: -10px;
+      		}
+ 
+        	.layui-input{
+        		border-radius: 5px;
+        		width: 300px;
+        		height: 40px;
+        		font-size: 15px;
+        	}
+        	.layui-form-item{
+        		margin-left: -20px;
+				margin-bottom: 30px;
+        	}
+			#logoid{ 
+				font-size: 20px;
+		 		 padding-left:165px; 
+		 		 padding-bottom: 15px;
+			}
+			.layui-btn{
+				margin-left: -50px;
+				border-radius: 5px;
+        		width: 350px;
+        		height: 40px;
+        		font-size: 15px;
+			}
+			.verity{
+				width: 120px;
+			}
+			.font-set{
+				font-size: 13px;
+				text-decoration: none; 
+				margin-left: 190px;
+			}
+			a:hover{
+			 text-decoration: underline; 
+			}
+ 
+        </style>
+    </head>
+    <body>
+    	<!-- <form class="layui-form"  method="post"> -->
+    		<div class="container">
+    			<div class="layui-form-mid layui-word-aux">
+					<P id="logoid">学 生 登 录</P>    				
+    			</div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">用户名</label>
+			    <div class="layui-input-block">
+			      <input type="text" name="title" required  lay-verify="required" placeholder="请输入学号" autocomplete="off" class="layui-input" id = "userName">
+			    </div>
+			  </div>
+			  <div class="layui-form-item">
+			    <label class="layui-form-label">密 &nbsp;&nbsp;码</label>
+			    <div class="layui-input-inline">
+			      <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" id = "password">
+			    </div>
+			    <!-- <div class="layui-form-mid layui-word-aux">辅助文字</div> -->
+			  </div>
+ 
+			  <div class="layui-form-item">
+			    <div class="layui-input-block">
+			      <button class="layui-btn" lay-filter="formDemo" id = "submitBtn">登陆</button>	     
+			    </div>
+			  </div>
+			   <a href="" class="font-set" id = "pwdTip">忘记密码?</a>  
+			</div>
+		<!-- </form> -->
+		<script type="text/javascript" src="layui/layui.js"></script>
+		<script>
+			layui.use(['form',  'layer'], function(){
+			  var form = layui.form
+			  ,layer = layui.layer
+			  ,$ = layui.$;
+
+			  layer.tips('悄悄告诉你：密码和你的学号一样哦！', '#pwdTip', {
+				tips: [3, '#78BA32']
+			  });
+
+			  $("#submitBtn").on("click",function(){
+				var userName = $("#userName").val();
+				var password = $("#password").val();
+				if(userName == password){
+					$.ajax({
+						type : 'post',
+						// contentType: "application/json;charset=UTF-8",
+						// data : JSON.stringify(data) ,
+						// dataType: 'json',
+						url : 'http://localhost/stu/queryStuNo?stuNumber='+userName,
+						success : function(result){
+							if(result.code == "0"){
+								$.cookie("stuNumber",userName);//关闭浏览器过期。
+								layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+								window.location.href = "http://localhost/stuQuestion";
+							}else if(result.code == "-1"){
+								layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+								document.getElementById("userName").value='';
+								document.getElementById("password").value='';
+							}
+						},
+						error : function(){
+							window.location.href = "http://localhost/error";
+
+						}
+					});
+				}else{
+					layer.msg("密码错误，请重新输入");
+				}
+				  
+				return false;
+			  });
+			  
+			  //日期
+			 /* laydate.render({
+			    elem: '#date'
+			  });
+			  laydate.render({
+			    elem: '#date1'
+			  });
+			  
+			  //创建一个编辑器
+			  var editIndex = layedit.build('LAY_demo_editor');
+			 
+			  //自定义验证规则
+			  form.verify({
+			    title: function(value){
+			      if(value.length < 5){
+			        return '标题至少得5个字符啊';
+			      }
+			    }
+			    ,pass: [
+			      /^[\S]{6,12}$/
+			      ,'密码必须6到12位，且不能出现空格'
+			    ]
+			    ,content: function(value){
+			      layedit.sync(editIndex);
+			    }
+			  });
+			  
+			  //监听指定开关
+			  form.on('switch(switchTest)', function(data){
+			    layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
+			      offset: '6px'
+			    });
+			    layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+			  });*/
+			  
+			  //监听提交
+			//   form.on('submit(demo1)', function(data){
+			//     layer.alert(JSON.stringify(data.field), {
+			//       title: '最终的提交信息'
+			//     })
+			//     return false;
+			//   });
+			 
+			  //表单初始赋值
+			 /* form.val('example', {
+			    "username": "贤心" // "name": "value"
+			    ,"password": "123456"
+			    ,"interest": 1
+			    ,"like[write]": true //复选框选中状态
+			    ,"close": true //开关状态
+			    ,"sex": "女"
+			    ,"desc": "我爱 layui"
+			  })*/
+			  
+			  
+			});
+			</script>
+    </body>
+</html>

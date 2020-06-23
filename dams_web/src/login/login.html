@@ -1,0 +1,126 @@
+<html>
+<head>
+    <title>欢迎登录宿舍管理系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--用百度的静态资源库的cdn安装bootstrap环境-->  
+        <!-- Bootstrap 核心 CSS 文件 -->  
+        <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">  
+        <!--font-awesome 核心我CSS 文件-->  
+        <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">  
+        <!-- 在bootstrap.min.js 之前引入 -->  
+        <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>  
+        <!-- Bootstrap 核心 JavaScript 文件 -->  
+        <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+        <!--引入JS的Cookie-->
+        <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
+
+        <style type="text/css">
+            body{background-color: rgb(136, 185, 169);}  
+            .form{background: rgba(255,255,255,0.2);width:400px;margin:100px auto;}  
+            #login_form{display: block;}  
+            .fa{display: inline-block;top: 27px;left: 6px;position: relative;color: #ccc;}  
+            input[type="text"],input[type="password"]{padding-left:26px;}  
+            .checkbox{padding-left:21px;}  
+        </style>  
+
+</head>
+<body>
+
+    <div class="container">  
+        <div class="form row">  
+            <form class="form-horizontal col-sm-offset-3 col-md-offset-3" id="login_form">  
+                <h3 class="form-title">欢迎登录宿舍管理系统</h3>  
+                <div class="col-sm-9 col-md-9">  
+                    <div class="form-group">  
+                        <i class="fa fa-user fa-lg"></i>  
+                        <input class="form-control required" type="text" placeholder="请输入账号" name="userName" id="userName" autofocus="autofocus" maxlength="20"/>  
+                    </div>  
+                    <div class="form-group">  
+                            <i class="fa fa-lock fa-lg"></i>  
+                            <input class="form-control required" type="password" placeholder="请输入密码" id="password" name="password" maxlength="8"/>  
+                    </div>  
+                    <div class="form-group">  
+                        <label class="checkbox">  
+                            <input type="checkbox" name="remember" id = "rememberMe" value="1"/> 记 住 我  
+                        </label>  
+                        <hr />  
+                        <a href="javascript:;" id="register_btn" class="">没账号？点击注册用户</a>  
+                    </div>  
+                    <div class="form-group">  
+                        <button type="submit" class="btn btn-success pull-right" id = "login" >登录</button>     
+                    </div>  
+                </div>  
+            </form>  
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $("#register_btn").click(function(){
+        window.location.href = "http://localhost/register";
+    });
+
+    if($.cookie("userName")){
+        $("#userName").val($.cookie("userName"));
+    }
+    if($.cookie("password")){
+        $("#password").val($.cookie("password"));
+    }
+
+    function isNotEmpty(data){
+        if (data == null || data == "") {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    $('#login').click(function(){
+        var data={};
+        var userName = $("#userName").val();
+        var password = $("#password").val();
+        if(isNotEmpty(userName) && isNotEmpty(password)){
+            // $("#rememberMe").on("ifClicked",function(){
+                
+            // });
+            if($("#rememberMe").is(':checked')){
+                $.cookie("userName",userName,{ expires: 7 });
+                $.cookie("password",password,{ expires: 7 });
+            }else{
+                if(userName != $.cookie("userName")){
+                    $.cookie("userName",userName);
+                    $.cookie("password",password);
+                }
+            }
+            data["userName"] = userName;
+            data["userPwd"] = password;
+            $.ajax({
+                type : 'post',
+                data : data ,
+                dataType: 'json',
+                url : 'http://localhost/login/loginIn',
+                success : function(result){
+                    if(result.resultCode == "1"){
+                        window.location.href = "http://localhost/main";
+                    }else if(result.resultCode == "2"){
+                        window.confirm("您没有权限，请联系管理员授权！");
+                    }
+                },
+                error : function(){
+                    window.location.href = "http://localhost/error";
+
+                }
+            })
+        }else{
+            window.alert("请输入账号/密码！");
+        }
+        
+        return false;
+    });
+</script>
+</body>
+
+
+
+
+</html>

@@ -1,0 +1,58 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jqf.dams.dao.QuestionDao">
+
+    <resultMap id="baseMap" type="com.jqf.dams.bean.QuestionBean">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="QUESTION_ID" property="questionId" jdbcType="VARCHAR"/>
+        <result column="QUESTION_NUMBER" property="questionNumber" jdbcType="VARCHAR"/>
+        <result column="QUESTION_TITLE" property="questionTitle" jdbcType="VARCHAR"/>
+        <result column="IS_MORE_SELECT" property="isMoreSelect" jdbcType="VARCHAR"/>
+        <result column="ANSWERS" property="answers" jdbcType="VARCHAR"/>
+        <result column="IS_RELEASE" property="isRelease" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="result_base_list">
+        ID,QUESTION_ID,QUESTION_NUMBER,QUESTION_TITLE,IS_MORE_SELECT,ANSWERS,IS_RELEASE
+    </sql>
+
+    <select id="queryALLQuestion" resultMap="baseMap" parameterType="String">
+        select
+        <include refid="result_base_list"></include>
+        from question
+        <where>
+            <if test="questionId!=null and questionId!=''">
+                QUESTION_ID = #{questionId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="addQuestion" >
+        insert into
+        question(QUESTION_ID,QUESTION_NUMBER,QUESTION_TITLE,IS_MORE_SELECT,ANSWERS)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+               (#{item.questionId},#{item.questionNumber},#{item.questionTitle},#{item.isMoreSelect},#{item.answers})
+        </foreach>
+    </insert>
+
+    <update id="releaseQuestion">
+        update question
+        set IS_RELEASE = #{isRelease}
+        where QUESTION_ID = #{questionId}
+    </update>
+
+    <select id="queryReleaseCount" resultType="java.lang.Integer">
+        select count(*)
+        FROM question
+        where IS_RELEASE = '1'
+    </select>
+
+    <select id="queryreleaseQuestion" resultMap="baseMap">
+        select
+        <include refid="result_base_list"></include>
+        from question
+        where IS_RELEASE = '1'
+    </select>
+
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jqf.dams.dao.DormitoryDao">
+
+    <resultMap id="baseMap" type="com.jqf.dams.bean.DormitoryBean">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="DORMITORY_BUILDING" property="dormBuilding" jdbcType="VARCHAR"/>
+        <result column="DORMITORY_SEX" property="dormSex" jdbcType="VARCHAR"/>
+        <result column="DORMITORY_NUMBER" property="dormNumber" jdbcType="VARCHAR"/>
+        <result column="DORMITORY_CAPACITY" property="dormCapacity" jdbcType="VARCHAR"/>
+        <result column="DORMITORY_STUDENTS" property="dormStudents" jdbcType="VARCHAR"/>
+        <result column="IS_FULL" property="isFull" jdbcType="VARCHAR"/>
+        <result column="REMAIN_NUMBER" property="remainNumber" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="result_base_list">
+        ID, DORMITORY_BUILDING,DORMITORY_SEX, DORMITORY_NUMBER, DORMITORY_CAPACITY, DORMITORY_STUDENTS,IS_FULL,REMAIN_NUMBER
+    </sql>
+
+    <select id="queryDormInfo" resultMap="baseMap" parameterType="java.util.Map">
+        select
+        <include refid="result_base_list"></include>
+        from dormitory
+        <where>
+            <if test="dormBuilding!=null and dormBuilding!=''">
+                AND DORMITORY_BUILDING like concat('%',#{dormBuilding},'%')
+            </if>
+            <if test="dormSex!=null and dormSex!=''">
+                AND DORMITORY_SEX like concat('%',#{dormSex},'%')
+            </if>
+            <if test="dormNumber!=null and dormNumber!=''">
+                AND DORMITORY_NUMBER like concat('%',#{dormNumber},'%')
+            </if>
+            <if test="dormCapacity!=null and dormCapacity!=''">
+                AND DORMITORY_CAPACITY like concat('%',#{dormCapacity},'%')
+            </if>
+            <if test="dormStudents!=null and dormStudents!=''">
+                AND DORMITORY_STUDENTS like concat('%',#{dormStudents},'%')
+            </if>
+        </where>
+    </select>
+
+    <insert id="addDormitories" parameterType="java.util.List">
+        insert into dormitory(DORMITORY_BUILDING,DORMITORY_SEX, DORMITORY_NUMBER, DORMITORY_CAPACITY,DORMITORY_STUDENTS,IS_FULL,REMAIN_NUMBER)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.dormBuilding},
+            #{item.dormSex},
+            #{item.dormNumber},
+            #{item.dormCapacity},
+            #{item.dormStudents},
+            #{item.isFull},
+            #{item.remainNumber}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryDormsByBuilding" resultMap="baseMap">
+        select
+        <include refid="result_base_list"></include>
+        from dormitory
+        where DORMITORY_BUILDING = #{dormBuilding}
+        ORDER BY DORMITORY_NUMBER ASC
+    </select>
+
+    <select id="queryNotFullDormByParam" resultMap="baseMap" parameterType="java.util.Map">
+        select
+        <include refid="result_base_list"></include>
+        from dormitory
+        where DORMITORY_BUILDING = #{dormBuilding}
+        AND DORMITORY_NUMBER = #{dormNumber}
+        ORDER BY DORMITORY_NUMBER ASC
+    </select>
+
+    <select id="queryNotFullDorm" resultMap="baseMap" >
+        select
+        <include refid="result_base_list"></include>
+        from dormitory
+        where DORMITORY_BUILDING = #{dormBuilding}
+        AND IS_FULL = '0'
+        ORDER BY DORMITORY_NUMBER ASC
+    </select>
+
+    <update id="setDormStu">
+        update dormitory
+        set DORMITORY_STUDENTS = #{dormStudents},
+            IS_FULL = #{isFull},
+            REMAIN_NUMBER = #{remainNumber}
+        where DORMITORY_BUILDING = #{dormBuilding}
+        AND DORMITORY_NUMBER = #{dormNumber}
+    </update>
+
+    <select id="queryBuildingBySex" resultType="java.lang.String">
+        select DISTINCT DORMITORY_BUILDING
+        from dormitory
+        where DORMITORY_SEX = #{dormSex}
+        ORDER BY DORMITORY_BUILDING ASC
+    </select>
+
+</mapper>

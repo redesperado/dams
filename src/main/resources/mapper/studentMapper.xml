@@ -1,0 +1,125 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jqf.dams.dao.StudentDao">
+
+    <resultMap id="baseMap" type="com.jqf.dams.bean.StudentBean">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="STU_NUMBER" property="stuNumber" jdbcType="VARCHAR"/>
+        <result column="STU_NAME" property="stuName" jdbcType="VARCHAR"/>
+        <result column="STU_SEX" property="stuSex" jdbcType="VARCHAR"/>
+        <result column="PROFESSION_CODE" property="professionCode" jdbcType="VARCHAR"/>
+        <result column="PROFESSION_NAME" property="professionName" jdbcType="VARCHAR"/>
+        <result column="CLASS_NAME" property="className" jdbcType="VARCHAR"/>
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+        <result column="QUESTION_ANSWERS" property="questionAnswers" jdbcType="VARCHAR"/>
+        <result column="STU_DORMITORY" property="stuDormitory" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="result_base_list">
+        <![CDATA[ ID,STU_NUMBER,STU_NAME,STU_SEX,PROFESSION_CODE,PROFESSION_NAME,CLASS_NAME,QUESTION_ANSWERS,STU_DORMITORY ]]>
+    </sql>
+
+    <select id="selectAllStuInfo" resultMap="baseMap">
+        select 
+        <include refid="result_base_list"></include>
+        FROM student
+    </select>
+
+    <select id="selectStuCount" resultType="java.lang.Integer">
+        SELECT
+            Count(*)
+        FROM student
+    </select>
+
+    <select id="selectStuByParam" resultMap="baseMap" parameterType="java.util.Map">
+        select
+        <include refid="result_base_list"></include>
+        FROM student
+        <where>
+            <if test="stuNumber!=null and stuNumber!=''">
+                AND STU_NUMBER like concat('%',#{stuNumber},'%')
+            </if>
+            <if test="stuName!=null and stuName!=''">
+                AND STU_NAME like concat('%',#{stuName},'%')
+            </if>
+            <if test="stuSex!=null and stuSex!=''">
+                AND STU_SEX like concat('%',#{stuSex},'%')
+            </if>
+            <if test="professionCode!=null and professionCode!=''">
+                AND PROFESSION_CODE like concat('%',#{professionCode},'%')
+            </if>
+            <if test="professionName!=null and professionName!=''">
+                AND PROFESSION_NAME like concat('%',#{professionName},'%')
+            </if>
+            <if test="className!=null and className!=''">
+                AND CLASS_NAME like concat('%',#{className},'%')
+            </if>
+        </where>
+
+    </select>
+
+    <insert id="addStudents" parameterType="java.util.List">
+        insert into student(STU_NUMBER,STU_NAME,STU_SEX,PROFESSION_CODE,PROFESSION_NAME,CLASS_NAME,PASSWORD)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+               (
+                #{item.stuNumber},
+                #{item.stuName},
+                #{item.stuSex},
+                #{item.professionCode},
+                #{item.professionName},
+                #{item.className},
+                #{item.password}
+               )
+        </foreach>
+    </insert>
+
+    <select id="queryStuNo" resultType="java.lang.Integer">
+        select count(*)
+        FROM student
+        where STU_NUMBER = #{stuNumber}
+    </select>
+
+    <delete id="delStudentById">
+        delete from student
+        where ID = #{id}
+    </delete>
+
+    <update id="addQuestAnswerByStuNumber">
+        update student
+        set QUESTION_ANSWERS = #{questionAnswers}
+        where STU_NUMBER = #{stuNumber}
+    </update>
+
+    <select id="queryQuestAnswerByStuNumber" resultType="String">
+        select QUESTION_ANSWERS
+        from student
+        where STU_NUMBER = #{stuNumber};
+    </select>
+
+    <select id="queryStudentAnswerByProCode" resultMap="baseMap">
+        select
+        <include refid="result_base_list"></include>
+        from student
+        where PROFESSION_CODE = #{professionCode}
+    </select>
+
+    <update id="setStuDorm">
+        update student
+        set STU_DORMITORY = #{stuDormitory}
+        where STU_NUMBER in
+        <foreach collection="stuNumbers" item="item" index="index" open="(" separator="," close=")">
+
+            #{item.stuNumber}
+
+        </foreach>
+    </update>
+
+    <select id="queryProCode" resultType="java.lang.String">
+        select DISTINCT PROFESSION_CODE
+        from student
+        ORDER BY PROFESSION_CODE ASC
+    </select>
+
+
+</mapper>

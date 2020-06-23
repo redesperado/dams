@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>dormImport</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .layui-card{height: 190px;}
+    </style>
+</head>
+<body>
+
+    <div style="padding: 20px; background-color: #F2F2F2;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                <div class="layui-card-header">宿舍信息导入</div>
+                <div class="layui-card-body">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">文件名:</label>
+                        <div class="layui-input-block">
+                          <input type="text" name="title" placeholder="请选择文件" id = "fileNameInput" autocomplete="off" class="layui-input" disabled="disabled" title="不可编辑">
+                        </div>
+                      </div>
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal" id="chooseFile" >选择文件</button>
+                        <button type="button" class="layui-btn" id="fileUpload"><span class="glyphicon glyphicon-cloud-upload"></span>文件导入</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">模板下载</div>
+                    <div class="layui-card-body">
+                        点击下载模板：<br/><br/>
+                        <button type="button" class="layui-btn" id="fileDownLoad"><span class="glyphicon glyphicon-cloud-download"></span>模板下载</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                  <div class="layui-card-header">小贴士</div>
+                  <div class="layui-card-body">
+                    请先下载模板，在模板中填写宿舍信息。<br/>
+                    宿舍信息导入成功与否会都会有提示，如果上传失败，请检查文件填写信息重新上传。
+                  </div>
+                </div>
+              </div>
+        </div>
+      </div> 
+
+    
+
+    <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script  type="text/javascript">
+
+        layui.use(['upload','layer'], function(){
+                var $ = layui.jquery
+                ,layer = layui.layer;
+
+            var fileName = '';
+            function upload() {
+                var inputObj=document.createElement('input')
+                inputObj.setAttribute('id','file');
+                inputObj.setAttribute('type','file');
+                inputObj.setAttribute('name','file');
+                inputObj.setAttribute("style",'visibility:hidden');
+                document.body.appendChild(inputObj);
+                inputObj.value;
+                inputObj.click();
+                console.log(inputObj);
+            } 
+
+            $("#chooseFile").on('click',function(){
+                upload();
+                document.querySelector('#file').addEventListener('change', e => {
+                    for (let entry of e.target.files){
+                        document.getElementById("fileNameInput").value=entry.name;
+                        console.log(entry.name, entry.webkitRelativePath);
+                        fileName = entry.name;
+                    }
+                });
+            });
+
+            $("#fileUpload").on('click',function(){
+                var data = {
+                    "fileName":fileName
+                };
+                $.ajax({
+                    type : 'get',
+                    data : data ,
+                    dataType: 'json',
+                    url : 'http://localhost/file/dormUpload',
+                    success : function(result){
+                        if(result.code == "0"){
+                            document.getElementById("fileNameInput").value="";
+                            layer.msg('导入中，请稍后', {
+                                icon: 16
+                                ,shade: 0.01
+                            });
+                            layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+                        }else if(result.code == "-1"){
+                            layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                        }
+                    },
+                    error : function(){
+                        layer.msg("异常错误！",{icon:2,shadow:0.6,time:3000});
+
+                    }
+                })
+            });
+
+
+            $("#fileDownLoad").on('click',function(){
+                var link = document.createElement('a');
+                link.setAttribute("download", "");
+                link.href = 'http://localhost/file/downloadDormExcel';
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html>

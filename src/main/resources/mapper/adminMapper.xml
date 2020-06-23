@@ -1,0 +1,75 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.jqf.dams.dao.AdminDao">
+
+    <resultMap id="baseMap" type="com.jqf.dams.bean.AdminBean">
+        <id column="ID" property="id" jdbcType="VARCHAR"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+        <result column="PASSWORD_VALUE" property="pwdValue" jdbcType="VARCHAR"/>
+        <result column="ROLE" property="role" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+
+    <select id="selectAllUserInfo" resultMap="baseMap">
+        SELECT
+            ID,USER_NAME,PASSWORD,PASSWORD_VALUE,ROLE
+        FROM admin
+    </select>
+
+    <select id="selectUserCount" resultType="java.lang.Integer">
+        SELECT
+            Count(*)
+        FROM admin
+    </select>
+
+    <select id="getPassword" resultType="String">
+        select PASSWORD from admin where USER_NAME = #{userName}
+    </select>
+
+    <select id="getUserRole" resultType="String">
+        select ROLE from admin where USER_NAME = #{userName}
+    </select>
+
+    <insert id="addUser" >
+        insert into
+        admin(USER_NAME,PASSWORD,PASSWORD_VALUE)
+        values (#{userName},#{password},#{pwdValue})
+    </insert>
+
+    <delete id="delUserById">
+        delete from admin
+        where ID = #{id}
+    </delete>
+
+    <select id="slectUserByName" resultMap="baseMap">
+        select ID,USER_NAME,ROLE
+        from admin
+        <where>
+            <if test="userName!=null and userName!=''">
+                USER_NAME like concat('%',#{userName},'%')
+            </if>
+        </where>
+    </select>
+    
+    <select id="auditUserName" resultType="java.lang.Integer">
+        select count(*)
+        from admin
+        where USER_NAME = #{userName}
+    </select>
+
+    <update id="modifyPwdByUserName">
+        update admin
+        set PASSWORD = #{password},PASSWORD_VALUE = #{pwdValue}
+        where USER_NAME = #{userName}
+    </update>
+
+    <update id="modifyAuthorById">
+        update admin
+        set ROLE = #{role}
+        where ID = #{id}
+    </update>
+
+</mapper>

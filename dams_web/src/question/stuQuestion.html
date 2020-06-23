@@ -1,0 +1,227 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>问卷填报</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <style>
+        body{background-image: url('img/fg.jpg');background-repeat: no-repeat;background-size: cover;}
+        #mainCard{width: 800px;height: 100%; margin: 20 auto;overflow:scroll; overflow-x:hidden;}
+        .layui-card-header{font-size: 25px;color: #362;text-align: center;}
+        #questBody{width: 600;margin: 0 auto;height: 100%;}
+        .singleQuestDiv{margin-top: 20px;}
+        .answer{display: block;margin-top: 5px;font-size: 15px;}
+        .label{margin-right: 5px;}
+        .btnDiv{text-align: center;}
+        #subBtn{width: 200px;margin-top: 20px;margin-bottom: 40px;}
+    </style>
+</head>
+<body>
+    <div class="layui-col-md12">
+        <div class="layui-card" id = "mainCard">
+          <div class="layui-card-header">
+              宿舍分配问卷调查
+          </div>
+          <div class="layui-card-body" id = "questBody">
+            <!--问卷内容-->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <script>
+        layui.use(['jquery','layer'], function(){
+            var $ = layui.$,
+            layer = layui.layer;
+            //全局变量：题目数量
+            var questQuantity;
+            function init(){
+                $.ajax({
+                    type : 'post',
+                    // contentType: "application/json;charset=UTF-8",
+                    // data : JSON.stringify(data) ,
+                    // dataType: 'json',
+                    url : 'http://localhost/quest/queryreleaseQuestion',
+                    success : function(result){
+                        if(result.code == "0"){
+                            //问卷信息生成方法
+                            // layer.msg("信息加载失败！",{icon:2,shadow:0.6,time:3000});
+                            createQuestion(result.data);
+                        }else if(result.code == "-1"){
+                            layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                            setTimeout(function(){ 
+                                window.location.href = "http://localhost/stuLogin"; 
+                            }, 3000);
+                        }
+                    },
+                    error : function(){
+                        window.location.href = "http://localhost/error";
+
+                    }
+                });
+                return false;
+            }
+
+            
+
+            //创建多选/单选按钮的方法
+            function createSelects(eleName,eleValue,eleType,eleId){
+                var element = null;
+                element = document.createElement('input');     
+                element.name = eleName;
+                element.value = eleValue;
+                element.type =eleType;
+                element.id = eleId;
+                return element;
+
+            }
+
+            function createQuestion(data){
+                var div0 = document.getElementById("questBody");
+                questQuantity = data.length;
+                for(var i = 0; i < questQuantity; i ++){
+                    var questNo = data[i].questionNumber;
+                    var title = data[i].questionTitle;
+                    var isMoreSelect = data[i].isMoreSelect;
+                    var answers = data[i].answers;
+                    var div1 = document.createElement("div");
+                    div1.setAttribute("class","singleQuestDiv");
+                    div0.appendChild(div1);
+                    var hh1 = document.createElement("h3");
+                    hh1.innerText = questNo+" . "+title;
+                    div1.appendChild(hh1);
+                    var selects = [];
+                    selects[0] = 'A';
+                    selects[1] = 'B';
+                    selects[2] = 'C';
+                    selects[3] = 'D';
+                    if(isMoreSelect == '1'){
+                        var answerArry = answers.split(',');
+                        var form1 = document.createElement('form');
+                        for(var j = 0 ; j < answerArry.length; j ++){
+                            var label1 = document.createElement('label');
+                            var input1 = createSelects('answer'+i,selects[j],'radio','answer'+i+j);
+                            input1.setAttribute("class","label");
+                            label1.setAttribute("class","answer");
+                            label1.appendChild(input1);
+                            var answerText = document.createTextNode(selects[j]+' . '+answerArry[j]);
+                            label1.appendChild(input1);
+                            label1.appendChild(answerText);
+                            form1.appendChild(label1);
+                        }
+                        div1.appendChild(form1);
+                    }else if(isMoreSelect == '2'){
+                        var answerArry = answers.split(',');
+                        var form1 = document.createElement('form');
+                        for(var j = 0 ; j < answerArry.length; j ++){
+                            var label1 = document.createElement('label');
+                            var input1 = createSelects('answer'+i,selects[j],'checkbox','answer'+i+j);
+                            input1.setAttribute("class","label");
+                            label1.setAttribute("class","answer");
+                            label1.appendChild(input1);
+                            var answerText = document.createTextNode(selects[j]+' . '+answerArry[j]);
+                            label1.appendChild(input1);
+                            label1.appendChild(answerText);
+                            form1.appendChild(label1);
+                        }
+                        div1.appendChild(form1);
+                    }
+                }
+                var div2 = document.createElement('div');
+                div2.setAttribute("class","btnDiv");
+                var subBtn = document.createElement('button');
+                subBtn.setAttribute("type",'button');
+                subBtn.setAttribute("class",'layui-btn layui-btn-normal');
+                subBtn.setAttribute("id",'subBtn');
+                var subText = document.createTextNode("提交");
+                subBtn.appendChild(subText);
+                div2.appendChild(subBtn);
+                div0.appendChild(div2);
+            }
+            init();
+
+            function getAnswerVal(answerName){
+                var answer = '';
+                var selects = document.getElementsByName(answerName);
+                var single = document.getElementById(answerName+'0');
+                var type = single.type;
+                if(type == 'checkbox'){
+                    var thisLength = selects.length;
+                    for(var i = 0;i < thisLength;i++) {
+                        if (selects[i].checked == true) {
+                            answer = answer + selects[i].value + ",";//这个是获取多选框中的值
+                        }
+                    }
+                    answer = answer.substring(0,answer.length-1);
+                }else if(type == 'radio'){
+                    answer = $('input[name="'+answerName+'"]:checked').val();
+                }
+                return answer;
+            }
+
+
+            function isEmpty(data){
+                if(data == '' || data == undefined || data == null || data == 'undefined'){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+
+            $(document).on("click", "#subBtn", function (){
+                    var stuNumber = $.cookie("stuNumber");
+                    var ans = "";
+                    for(var i = 0; i < questQuantity; i++){
+                        ans = ans + getAnswerVal('answer'+i) + ';';                        
+                    }
+                    var ansArry = ans.substring(0,ans.length-1).split(';');
+                    var emptyQuest = '';
+                    var flag = false;
+                    for(var i = 0; i < ansArry.length; i ++){
+                        if(isEmpty(ansArry[i])){
+                            flag = true;
+                            var titleNo = i+1;
+                            emptyQuest = emptyQuest + titleNo +",";
+                        }
+                    }
+                    if(flag){
+                        layer.alert("第" + emptyQuest.substring(0,emptyQuest.length-1)+"题未填写！", {icon: 0});
+                    }else{
+                        var data = {
+                            'stuNumber':stuNumber,
+                            'questionAnswers':ans.substring(0,ans.length-1)
+                        };
+                        $.ajax({
+                            type : 'post',
+                            contentType: "application/json;charset=UTF-8",
+                            data : JSON.stringify(data) ,
+                            dataType: 'json',
+                            url : 'http://localhost/stu/addQuestAnswerByStuNumber',
+                            success : function(result){
+                                if(result.code == "0"){
+                                    layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+                                    setTimeout(function(){ 
+                                        window.location.href = "http://localhost/stuLogin"; 
+                                    }, 3000);
+
+                                }else if(result.code == "-1"){
+                                    layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                                }
+                            },
+                            error : function(){
+                                window.location.href = "http://localhost/error";
+
+                            }
+                        }); 
+                        return false;
+                    }
+                
+                    
+                });
+        });
+        
+    </script>
+</body>
+</html>

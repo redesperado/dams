@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>studentSelect</title>
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        body{background-color: rgb(219, 219, 219);}
+        .rightCard{margin-top: 20px; margin-right: 10px;height: 600px;}
+        .leftCard{background: rgb(255, 255, 255);margin-top: 20px;margin-left: 10px;height: 600px;}
+      </style>
+</head>
+<body>
+    <div class="layui-row">
+        <div class="layui-col-xs12 layui-col-md8">
+          <div class="grid-demo grid-demo-bg1 leftCard">
+            <div class="demoTable" style="padding: 10px;">
+                学号：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="stuNo" autocomplete="off">
+                </div>
+                &nbsp;姓名：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="stuName" autocomplete="off">
+                </div>
+                &nbsp;姓别：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="stuSex" autocomplete="off">
+                </div>
+                &nbsp;专业编码：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="proNo" autocomplete="off">
+                </div><br/><br/>
+                班级：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="className" autocomplete="off">
+                </div>
+                &nbsp;专业名称：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="proName" autocomplete="off">
+                </div>
+                <button class="layui-btn" data-type="reload" id = "searchBtn">搜索</button>
+            </div>
+               
+            <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table> 
+          </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-md4">
+          <div class="grid-demo">
+            <div class="layui-col-md12">
+                <div class="layui-card rightCard">
+                  <div class="layui-card-header">温馨提示</div>
+                  <div class="layui-card-body">
+                    搜索提示：<br/>
+                    支持根据学号，姓名，性别，专业编码,班级，专业名称进行精准查询；<br/>
+                    也支持根据学号，姓名，性别，专业编码，班级，专业名称进行模糊查询。<br/>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+      <script>
+        layui.use(['table','jquery','layer'], function(){
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.$;
+            // var stuNo = $('#stuNo').val();
+            // var stuName = $('#stuName').val();
+            // var stuSex = $('#stuSex').val();
+            // var proNo = $('#proNo').val();
+            // var proName = $('#proName').val();
+            // var className = $('#className').val();
+            // var params = {
+            //     'stuNumber' : stuNo,
+            //     'stuName' : stuName,
+            //     'stuSex' : stuSex,
+            //     'professionCode' : proNo,
+            //     'professionName' : proName,
+            //     'className' : className
+            // }
+            
+            //方法级渲染
+            table.render({
+                elem: '#LAY_table_user'
+                // ,contentType: "application/json;charset=UTF-8"
+                // ,data: params
+                ,type: 'get'
+                // ,dataType: 'json'
+                ,url: 'http://localhost/stu/selectStuByParam'
+                ,cols: [[
+                        // { type: 'checkbox', fixed: 'left' }, 
+                        { field: 'id', title: 'ID',  sort: true ,align: 'center'}, 
+                        { field: 'stuNumber', title: '学号',sort: true ,align: 'center'}, 
+                        { field: 'stuName', title: '姓名',align: 'center'}, 
+                        { field: 'stuSex', title: '性别' ,align: 'center'}, 
+                        { field: 'professionCode', title: '专业编码'}, 
+                        { field: 'professionName', title: '专业名称',align: 'center'},
+                        { field: 'className', title: '班级',align: 'center'},
+                        {field:'questionAnswers', title:'问卷答案'},
+                        { field: 'stuDormitory', title: '宿舍',align: 'center' }
+                        // { field: 'experience', title: '积分', width: 80, sort: true }, 
+                        // { field: 'score', title: '评分', width: 80, sort: true }, 
+                        // { field: 'classify', title: '职业', width: 80 }, 
+                        // { field: 'wealth', title: '财富', width: 135, sort: true }, 
+                        // { fixed: 'right', align: 'center', toolbar: '#barDemo' }
+                ]]
+                ,id: 'testReload'
+                ,page: true
+                ,height: 460
+            });
+            // //监听 行 工具事件
+            // table.on('tool(user)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            //         var data = obj.data ,//获得当前行数据
+            //             layEvent = obj.event; //获得 lay-event 对应的值
+            //         var userInfo = '';
+            //         userInfo = '账号：'+data.userName+' \n密码：'+data.password;
+            //         if(layEvent === 'auth') {
+            //             layer.alert(userInfo, {
+            //             skin: 'layui-layer-molv' //样式类名
+            //             ,closeBtn: 0
+            //             });
+            //         }
+            //     });
+            
+            active = {
+                reload: function(){
+                var stuNo = $('#stuNo').val();
+                var stuName = $('#stuName').val();
+                var stuSex = $('#stuSex').val();
+                var proNo = $('#proNo').val();
+                var proName = $('#proName').val();
+                var className = $('#className').val();
+                // var params = {
+                //     "stuNumber" : stuNo,
+                //     "stuName" : stuName,
+                //     "stuSex" : stuSex,
+                //     "professionCode" : proNo,
+                //     "professionName" : proName,
+                //     "className" : className
+                // }
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                    curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        
+                      "stuNumber" : stuNo,
+                      "stuName" : stuName,
+                      "stuSex" : stuSex,
+                      "professionCode" : proNo,
+                      "professionName" : proName,
+                      "className" : className
+                        
+                    }
+                }, 'data');
+                }
+            };
+            
+            $('.demoTable .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+
+    </script>
+
+</body>
+</html>

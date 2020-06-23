@@ -1,0 +1,138 @@
+<html>
+<head>
+    <title>注册新用户</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--用百度的静态资源库的cdn安装bootstrap环境-->  
+        <!-- Bootstrap 核心 CSS 文件 -->  
+        <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">  
+        <!--font-awesome 核心我CSS 文件-->  
+        <link href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">  
+        <!-- 在bootstrap.min.js 之前引入 -->  
+        <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>  
+        <!-- Bootstrap 核心 JavaScript 文件 -->  
+        <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>  
+        <style type="text/css">
+            body{background-color: rgb(136, 185, 169);}  
+            .form{background: rgba(255,255,255,0.2);width:400px;margin:100px auto;}  
+            #login_form{display: block;}  
+            .fa{display: inline-block;top: 27px;left: 6px;position: relative;color: #ccc;}  
+            input[type="text"],input[type="password"]{padding-left:26px;}  
+            .checkbox{padding-left:21px;} 
+
+        </style>  
+
+</head>
+<body>
+
+    <div class="form row">  
+        <form class="form-horizontal col-sm-offset-3 col-md-offset-3" id="register_form">  
+            <h3 class="form-title">新用户注册</h3>  
+            <div class="col-sm-9 col-md-9">  
+                <div class="form-group">  
+                    <i class="fa fa-user fa-lg"></i>  
+                    <input class="form-control required" type="text" placeholder="请输入账号" name="userName" id = "userName" autofocus="autofocus"/>  
+                </div>  
+                <div class="form-group">  
+                        <i class="fa fa-lock fa-lg"></i>  
+                        <input class="form-control required" type="password" placeholder="请输入密码" id="password" name="password"/>  
+                </div>  
+                <div class="form-group">  
+                        <i class="fa fa-check fa-lg"></i>  
+                        <input class="form-control required" type="password" placeholder="请再次输入密码" id = "rpassword" name="rpassword"/>  
+                </div> 
+                <div class="form-group">  
+                    <input type="submit" class="btn btn-success pull-right" id = "regist_btn" value="注 册 "/>  
+                    <input type = "submit" class="btn btn-info pull-left" id="back_btn" value="返 回"/>  
+                </div>  
+            </div>  
+        </form>  
+    </div>  
+
+
+
+<script type="text/javascript">
+
+    function isNotEmpty(data){
+        if (data == null || data == "") {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    $("#regist_btn").click(function(){
+        var data={};
+        var userName = $("#userName").val();
+        var password = $("#password").val();
+        var rpassword = $("#rpassword").val();
+        if(isNotEmpty(userName) && isNotEmpty(password) && isNotEmpty(rpassword)){
+            if(password == rpassword){
+                data = {
+                    "userName" : userName,
+                    "password" : password
+                };
+
+                $.ajax({
+                    type : 'get',
+                    contentType: "application/json;charset=UTF-8",
+                    url : 'http://localhost/api/auditUserName?userName='+userName,
+                    success : function(result){
+                        if(result.code == "0"){
+                            $.ajax({
+                                type : 'post',
+                                contentType: "application/json;charset=UTF-8",
+                                data : JSON.stringify(data) ,
+                                dataType: 'json',
+                                url : 'http://localhost/login/registerUser',
+                                success : function(result){
+                                    if(result.resultCode == "1"){
+                                        window.location.href = "http://localhost/login.html";
+                                        console.log("register sucess");
+                                    }else if(result.resultCode == "0"){
+                                        window.confirm("注册失败！");
+                                        console.log("register fail");
+                                    }
+                                    
+                                },
+                                error : function(){
+                                    console.log("error");
+                                    window.alert("异常错误！");
+                                    
+                                }
+                            });
+                        }else if(result.code == "-1"){
+                            window.confirm(result.msg);
+                            console.log("register fail");
+                        }
+                        
+                    },
+                    error : function(){
+                        console.log("error");
+                        window.alert("异常错误！");
+                        
+                    }
+                });
+                
+            
+            }else{
+                window.alert("两次输入密码不一致，请重新输入！");
+                
+            }
+
+        }else{
+            window.alert("请先完善信息！");
+            
+        }
+        return false;
+    });
+    $("#back_btn").click(function(){
+        window.location.href = "http://localhost/login.html";
+        return false;
+    });
+</script>
+</body>
+
+
+
+
+</html>

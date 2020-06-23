@@ -1,0 +1,72 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>authorization</title>
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        #form1{width: 400px;margin: 0 auto;}
+    </style>
+</head>
+<body>
+    <form class="layui-form" id = "form1">
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限</label>
+            <div class="layui-input-block">
+              <select name="author" lay-verify="required">
+                <option value=""></option>
+                <option value="admin">admin</option>
+                <option value="user">user</option>
+                <option value="NULL">NULL</option>
+              </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id = "sureBtn">确定</button>
+            </div>
+        </div>
+        
+    </form>
+    <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <script>
+        layui.use(['jquery','layer','form'], function(){
+            var $ = layui.$,
+            layer = layui.layer,
+            form = layui.form;
+            // var fatherId;
+            // function child(data){
+            //     fatherId = data;
+            // }
+            $("#sureBtn").on("click",function(){
+                var role = $("select[name='author']").val();
+                var data = {
+                    'role': role,
+                    'id': window.parent.userId
+                };
+                $.ajax({
+                    type : 'post',
+                    contentType: "application/json;charset=UTF-8",
+                    data : JSON.stringify(data) ,
+                    dataType: 'json',
+                    url : 'http://localhost/api/modifyAuthorById',
+                    success : function(result){
+                        if(result.code == "0"){
+                            parent.layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+                            layer.close();
+                        }else if(result.code == "-1"){
+                            parent.layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                        }
+                    },
+                    error : function(){
+                        window.location.href = "http://localhost/error";
+
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
+</body>
+</html>

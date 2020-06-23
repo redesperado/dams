@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>userInfo</title>
+  <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+  <link rel="stylesheet" href="layui/css/layui.css">
+  <style>
+    body{margin: 10px;}
+  </style>
+</head>
+<body>
+ 
+    <table class="layui-hide" id="userInfo" lay-filter="test"></table>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+        <!-- <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a> -->
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+  
+<!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+<script type="text/javascript" src="layui/layui.js"></script>
+<!-- <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script> -->
+<script type="text/javascript">
+layui.use(['table','jquery','layer'], function() {
+            var table = layui.table; //表格
+            var layer = layui.layer;
+            var $ = layui.$;
+            // layer.load(2);
+            //执行一个 table 实例
+            table.render({
+                elem: '#userInfo',
+                height: 500,
+                // width: 1100,
+                url: 'http://localhost/api/users',//数据接口
+                title: '用户表',
+                page: true, //开启分页
+                limit: 10,
+                toolbar: 'default' ,//开启工具栏，此处显示默认图标，可以自定义模板，详见文档,
+                // totalRow: true ,//开启合计行
+                cellMinWidth: 80,
+                cols: [//表头
+                    [ 
+                        // { type: 'checkbox', fixed: 'left' }, 
+                        { field: 'id', title: 'ID',  sort: true,align: 'center'}, 
+                        { field: 'userName', title: '用户名' ,align: 'center'}, 
+                        { field: 'password', title: '加密密码',align: 'center'}, 
+                        { field: 'pwdValue', title: '原始密码',align: 'center'}, 
+                        { field: 'role', title: '角色' ,align: 'center'}, 
+                        // { field: 'sign', title: '签名', width: 177 }, 
+                        // { field: 'experience', title: '积分', width: 80, sort: true }, 
+                        // { field: 'score', title: '评分', width: 80, sort: true }, 
+                        // { field: 'classify', title: '职业', width: 80 }, 
+                        // { field: 'wealth', title: '财富', width: 135, sort: true }, 
+                        { fixed: 'right', align: 'center', toolbar: '#barDemo' }
+                    ]
+                ]
+            });
+
+            //监听 头 工具栏事件
+            table.on('toolbar(test)', function(obj) {
+                var checkStatus = table.checkStatus(obj.config.id),
+                    data = checkStatus.data; //获取选中的数据
+                switch(obj.event) {
+                    case 'add':
+                        layer.msg('添加');
+                        break;
+                    case 'update':
+                        if(data.length === 0) {
+                            layer.msg('请选择一行');
+                        } else if(data.length > 1) {
+                            layer.msg('只能同时编辑一个');
+                        } else {
+                            layer.msg('暂不支持编辑', function(){
+                            //关闭后的操作
+                            });
+                        }
+                        break;
+                    case 'delete':
+                        if(data.length === 0) {
+                            layer.msg('请选择一行');
+                        } else {
+                            layer.msg('删除');
+                        }
+                        break;
+                };
+            });
+            //监听 行 工具事件
+            table.on('tool(test)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data ,//获得当前行数据
+                    layEvent = obj.event; //获得 lay-event 对应的值
+                var userInfo = '';
+                userInfo = '账号：'+data.userName+' \n密码：'+data.pwdValue;
+                if(layEvent === 'detail') {
+                    layer.alert(userInfo, {
+                    skin: 'layui-layer-molv' //样式类名
+                    ,offset: '300px'
+                    ,closeBtn: 0
+                    });
+                } else if(layEvent === 'del') {
+                    function del(userId){ 
+                        layer.open({
+                        content: '删除此用户？',
+                        offset: '300px',
+                        // success:function(layero,index){
+                        //     var body = layer.getChildFrame('body',index);
+                        // },
+                        yes: function(userId){
+                            $.post('http://localhost/api/deleteUserById?id='+userId , function(result){
+                                if(result.code == "0"){
+                                    layer.msg(data.msg,{icon:1,shadow:0.6,time:3000});
+                                    obj.del();
+                                }else if(result.code == "-1"){
+                                    layer.msg(data.msg,{icon:2,shadow:0.6,time:3000});
+                                }
+                                return false;
+                            });
+                        }
+                    });
+                    }
+                    var userId  =  data.id;
+                    // del(userId);
+
+                    layer.confirm('真的删除行么', function(index){
+                        // setTimeout(function(){
+                            
+                        // },'3000')
+                        //向服务端发送删除指令
+                        $.post('http://localhost/api/deleteUserById?id='+userId , function(result){
+                            if(result.code == "0"){
+                                parent.layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+                                obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                                layer.close(index);
+                            }else if(result.code == "-1"){
+                                parent.layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                            }
+                            return false;
+                        });
+                    });
+                    
+                    
+                    // var r=confirm("删除此用户？");
+                    // if (r==true){
+                        
+                    // }
+                    // layer.confirm('删除此用户？',{btn: ['确定','取消']}, function(index) {
+                    //     // layer.msg('查看操作11');
+                    //     $.ajax({
+                    //         type : 'post',
+                    //         data : data.id,
+                    //         dataType: 'json',
+                    //         async: false,
+                    //         url : 'http://localhost/api/deleteUserById',
+                    //         success : function(result){
+                    //             if(result.resultCode == "0"){
+                    //                 layer.msg(data.msg,{icon:1,shadow:0.6,time:3000},function(){
+                    //                     table.reload({page:{curr:1}});
+                    //                 });
+                    //             }else if(result.resultCode == "-1"){
+                    //                 layer.msg(data.msg,{icon:1,shadow:0.6,time:3000});
+                    //             }
+                    //         },
+                    //         error : function(){
+                    //             window.location.href = "http://localhost/error";
+
+                    //         }
+                    //     });
+                    //     return false;
+                    //     // layer.msg('查看操作22');
+                    // });
+                    
+                } else if(layEvent === 'edit') {
+                    layer.msg('编辑操作:<br>' + JSON.stringify(data));
+                }
+            });
+        });
+</script>
+</body>
+</html>        
+        

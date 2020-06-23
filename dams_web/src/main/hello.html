@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>hello</title>
+    <style>
+        body{
+            background: #9abcfb;
+        }
+        #helloText{margin-top: 2px;margin-bottom: 2px;font-size: 10px;}
+        #timeHello{margin-left: 20px;margin-bottom: 5px;font-size: 15px;color: blue;}
+    </style>
+</head>
+<body>
+
+    <p id = "helloText">欢 迎 登 录 ！</p><br/>
+
+    <p id = "timeHello">下 午 好 ！</p><br/>
+
+    <iframe id="fancybox-frame" name="fancybox-frame1589870084291" frameborder="0" scrolling="no" hspace="0"  src="http://i.tianqi.com/index.php?c=code&a=getcode&id=19&num=2&h=93&w=345"></iframe>
+
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+        var date = new Date();
+        var time = date.getHours();
+        if(time < 8){
+            $("#timeHello").text("早 上 好 ！新的一天，元气满满！");
+        }else if(time <11){
+            $("#timeHello").text("上 午 好 ！加油，努力，奋斗吧！");
+        }else if(time < 13){
+            $("#timeHello").text("中 午 好 ！吃饱减肥，别说我胖！");
+        }else if(time < 19){
+            $("#timeHello").text("下 午 好 ！稍事休息，养足精神！");
+        }else{
+            $("#timeHello").text("晚 上 好 ！切莫熬夜，早些入睡！");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>studentSelect</title>
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        body{background-color: rgb(219, 219, 219);}
+        .rightCard{margin-top: 20px; margin-right: 10px;height: 500px;}
+        .leftCard{background: rgb(255, 255, 255);margin-top: 20px;margin-left: 10px;height: 500px;}
+      </style>
+</head>
+<body>
+    <div class="layui-row">
+        <div class="layui-col-xs12 layui-col-md8">
+          <div class="grid-demo grid-demo-bg1 leftCard">
+            <div class="demoTable" style="padding: 10px;">
+                宿舍楼号：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="dormBuilding" autocomplete="off">
+                </div>
+                &nbsp;男/女宿舍楼：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="dormSex" autocomplete="off">
+                </div>
+                &nbsp;宿舍门牌号：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="dormNumber" autocomplete="off">
+                </div>
+                &nbsp;宿舍容量：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="dormCapacity" autocomplete="off">
+                </div><br/><br/>
+                宿舍学生：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="dormStudents" autocomplete="off">
+                </div>
+                <button class="layui-btn" data-type="reload" id = "searchBtn">搜索</button>
+            </div>
+               
+            <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table> 
+          </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-md4">
+          <div class="grid-demo">
+            <div class="layui-col-md12">
+                <div class="layui-card rightCard">
+                  <div class="layui-card-header">温馨提示</div>
+                  <div class="layui-card-body">
+                    搜索提示：<br/>
+                    支持根据宿舍楼号，男/女宿舍楼，宿舍门牌号，宿舍容量,宿舍学生进行精准查询；<br/>
+                    也支持根据宿舍楼号，男/女宿舍楼，宿舍门牌号，宿舍容量,宿舍学生进行模糊查询。<br/>
+                    列：“是否满员”的枚举值为：0——未满员；1——已满员。<br/>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+    </div>
+    <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+      <script>
+        layui.use(['table','jquery','layer'], function(){
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.$;
+            
+            //方法级渲染
+            table.render({
+                elem: '#LAY_table_user'
+                // ,contentType: "application/json;charset=UTF-8"
+                // ,data: params
+                ,type: 'get'
+                // ,dataType: 'json'
+                ,url: 'http://localhost/dorm/queryDormInfo'
+                ,cols: [[
+                        // { type: 'checkbox', fixed: 'left' }, 
+                        { field: 'id', title: 'ID',  sort: true ,align: 'center'}, 
+                        { field: 'dormBuilding', title: '宿舍楼号',sort: true ,align: 'center'}, 
+                        { field: 'dormSex', title: '男/女宿舍楼',align: 'center'}, 
+                        { field: 'dormNumber', title: '宿舍门牌号' ,align: 'center'}, 
+                        { field: 'dormCapacity', title: '宿舍容量',align: 'center'}, 
+                        { field: 'dormStudents', title: '宿舍学生',align: 'center'},
+                        { field: 'isFull', title: '是否满员',align: 'center'},
+                        { field: 'remainNumber', title:'剩余床位',align: 'center'}
+                        // { field: 'sign', title: '签名', width: 177 }, 
+                        // { field: 'experience', title: '积分', width: 80, sort: true }, 
+                        // { field: 'score', title: '评分', width: 80, sort: true }, 
+                        // { field: 'classify', title: '职业', width: 80 }, 
+                        // { field: 'wealth', title: '财富', width: 135, sort: true }, 
+                        // { fixed: 'right', align: 'center', toolbar: '#barDemo' }
+                ]]
+                ,id: 'testReload'
+                ,page: true
+                ,height: 310
+            });
+            // //监听 行 工具事件
+            // table.on('tool(user)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            //         var data = obj.data ,//获得当前行数据
+            //             layEvent = obj.event; //获得 lay-event 对应的值
+            //         var userInfo = '';
+            //         userInfo = '账号：'+data.userName+' \n密码：'+data.password;
+            //         if(layEvent === 'auth') {
+            //             layer.alert(userInfo, {
+            //             skin: 'layui-layer-molv' //样式类名
+            //             ,closeBtn: 0
+            //             });
+            //         }
+            //     });
+            
+            active = {
+                reload: function(){
+                var dormBuilding = $('#dormBuilding').val();
+                var dormSex = $('#dormSex').val();
+                var dormNumber = $('#dormNumber').val();
+                var dormCapacity = $('#dormCapacity').val();
+                var dormStudents = $('#dormStudents').val();
+                // var params = {
+                //     "stuNumber" : stuNo,
+                //     "stuName" : stuName,
+                //     "stuSex" : stuSex,
+                //     "professionCode" : proNo,
+                //     "professionName" : proName,
+                //     "className" : className
+                // }
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                    curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        
+                      "dormBuilding" : dormBuilding,
+                      "dormSex" : dormSex,
+                      "dormNumber" : dormNumber,
+                      "dormCapacity" : dormCapacity,
+                      "dormStudents" : dormStudents
+                        
+                    }
+                }, 'data');
+                }
+            };
+            
+            $('.demoTable .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+
+    </script>
+
+</body>
+</html>

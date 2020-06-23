@@ -1,0 +1,161 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>releaseQuestion</title>
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        body{background-color: rgb(219, 219, 219);}
+        .rightCard{margin-top: 20px; margin-right: 10px;height: 400px;}
+        .leftCard{background: rgb(255, 255, 255);margin-top: 20px;margin-left: 10px;height: 400px;}
+      </style>
+</head>
+<body>
+    <div class="layui-row">
+        <div class="layui-col-xs12 layui-col-md8">
+          <div class="grid-demo grid-demo-bg1 leftCard">
+            <div class="demoTable" style="padding: 10px;">
+                搜索问卷ID：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+                </div>
+                <button class="layui-btn" data-type="reload">搜索</button>
+            </div>
+               
+            <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table> 
+          </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-md4">
+          <div class="grid-demo">
+            <div class="layui-col-md12">
+                <div class="layui-card rightCard">
+                  <div class="layui-card-header">温馨提示</div>
+                  <div class="layui-card-body">
+                    问卷发布：<br/>
+                    每次只能发布一个问卷，若要重新发布，请先将已在发布状态的问卷取消发布。<br/>
+                    “发布/取消发布”同时具备发布和取消功能，是否发布在系统内部进行审核判断。<br/>
+                    根据问卷ID查找只支持精准查找，请留意创建问卷时系统给出的问卷ID。<br/>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/html" id="barDemo">
+        <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a> -->
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="release">发布/取消发布</a>
+    </script>
+
+      <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+      <script>
+        layui.use(['table','jquery','layer'], function(){
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.$;
+            var demoReload = $('#demoReload');
+            
+            //方法级渲染
+            table.render({
+                elem: '#LAY_table_user'
+                ,url: 'http://localhost/quest/queryQuest'
+                ,data: demoReload.val()
+                ,type: 'get'
+                ,cols: [[
+                        // { type: 'checkbox', fixed: 'left' }, 
+                        { field: 'id', title: 'ID',  sort: true ,align: 'center'}, 
+                        { field: 'questionId', title: '问卷ID',align: 'center'}, 
+                        { field: 'questionNumber', title: '题目编号',align: 'center'}, 
+                        { field: 'questionTitle', title: '问题题目',align: 'center'}, 
+                        { field: 'isMoreSelectDisplay', title: '是否多选',align: 'center'}, 
+                        { field:'answers', title:'答案选项',align: 'center'},
+                        { field: 'isReleaseDisplay', title: '是否发布',align: 'center'}, 
+                        // { field: 'experience', title: '积分', width: 80, sort: true }, 
+                        // { field: 'score', title: '评分', width: 80, sort: true }, 
+                        // { field: 'classify', title: '职业', width: 80 }, 
+                        // { field: 'wealth', title: '财富', width: 135, sort: true }, 
+                        { fixed: 'right',title:'操作', align: 'center', toolbar: '#barDemo' }
+                ]]
+                ,id: 'testReload'
+                ,page: true
+                ,height: 310
+            });
+            //监听 行 工具事件
+            table.on('tool(user)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data ,//获得当前行数据
+                        layEvent = obj.event; //获得 lay-event 对应的值
+                    var question = '';
+                    question = '问卷ID：'+data.questionId+' \n题目：'+data.questionTitle;
+                    var isRelease = data.isRelease;
+                    
+                    
+                    if(layEvent === 'release') {
+
+                      var flag = true;
+                      if(isRelease == "0"){
+                        isRelease = '1';
+                      }else if(isRelease == "1"){
+                        isRelease = '0';
+                      }
+                      var data = {
+                          'isRelease' : isRelease,
+                          'questionId' : data.questionId
+                      }
+                      if(flag){
+                        $.ajax({
+                            type : 'post',
+                            contentType: "application/json;charset=UTF-8",
+                            data : JSON.stringify(data) ,
+                            dataType: 'json',
+                            url : 'http://localhost/quest/modifyReleaseStatu',
+                            success : function(result){
+                                if(result.code == "0"){
+                                    layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+                                    table.reload('testReload', {
+                                        page: {
+                                        curr: 1 //重新从第 1 页开始
+                                        }
+                                        ,where: {
+                                          questionId: null
+                                        }
+                                    }, 'data');
+                                }else if(result.code == "-1"){
+                                    layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                                }
+                            },
+                            error : function(){
+                                window.location.href = "http://localhost/error";
+
+                            }
+                        });
+                      }
+                        
+                    }
+                });
+            
+            active = {
+                reload: function(){
+                var demoReload = $('#demoReload');
+                
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                    curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                      questionId: demoReload.val()
+                    }
+                }, 'data');
+                }
+            };
+            
+            $('.demoTable .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+
+        </script>
+</body>
+</html>

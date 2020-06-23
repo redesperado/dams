@@ -1,0 +1,628 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>question</title>
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        body{background-color: rgb(219, 219, 219);}
+        #mainCard{margin-top: 10px;margin-left: 20px;margin-right: 20px;overflow: scroll;height: 740px;overflow-x: hidden;}
+        #quest1,#quest2,#quest3,#quest4,#quest5,#quest6,#quest7,#quest8,#quest9,#quest10{display: none;}
+    </style>
+</head>
+<body>
+    <div class="layui-card" id = "mainCard">
+        <div class="demoTable" style="padding: 10px;">
+            设置题目数量：
+            <div class="layui-inline">
+              <input class="layui-input" name="id" id="questionNum" autocomplete="off">
+            </div>
+            <button class="layui-btn" data-type="reload" id = "sureBtn">确定</button>
+            <button class="layui-btn layui-btn-normal" data-type="reload" id = "createQuestion">创建问卷</button>
+        </div>
+        <div class="layui-card-header">问卷题目设置</div>
+        <div class="layui-card-body">
+
+            <div class="layui-collapse" lay-filter="test">
+
+                <div class="layui-colla-item" id = "quest1">
+                  <h2 class="layui-colla-title">题目1</h2>
+                  <!-- <button class="close layui-layout-right" title="关闭">X</button> -->
+                  <div class="layui-colla-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title1" id = "title1" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block" >
+                              <input type="radio" name="select1" value="1" title="单选" checked>
+                              <input type="radio" name="select1" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer11" id = "answer11" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer12" id = "answer12" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer13" id = "answer13" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer14" id = "answer14" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                    </form>
+                    
+                  </div>
+                </div>
+                <div class="layui-colla-item" id = "quest2">
+                  <h2 class="layui-colla-title">题目2</h2>
+                  <div class="layui-colla-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title2" id = "title2" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select2" value="1" title="单选" checked>
+                              <input type="radio" name="select2" value="2" title="多选">
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer21" id = "answer21" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer22" id = "answer22" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer23" id = "answer23" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer24" id = "answer24" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="layui-colla-item" id = "quest3">
+                  <h2 class="layui-colla-title">题目3</h2>
+                  <div class="layui-colla-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title3" id = "title3" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select3" value="1" title="单选" checked>
+                              <input type="radio" name="select3" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer31" id = "answer31" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer32" id = "answer32" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer33" id = "answer33" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer34" id = "answer34" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="layui-colla-item" id = "quest4">
+                  <h2 class="layui-colla-title">题目4</h2>
+                  <div class="layui-colla-content">
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title4" id = "title4" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select4" value="1" title="单选" checked>
+                              <input type="radio" name="select4" value="2" title="多选">
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer41" id = "answer41" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer42" id = "answer42" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer43" id = "answer43" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer44" id = "answer44" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="layui-colla-item" id = "quest5">
+                    <h2 class="layui-colla-title">题目5</h2>
+                    <div class="layui-colla-content">
+                      <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title5" id = "title5" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select5" value="1" title="单选" checked>
+                              <input type="radio" name="select5" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer51" id = "answer51" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer52" id = "answer52" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer53" id = "answer53" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer54" id = "answer54" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="layui-colla-item" id = "quest6">
+                    <h2 class="layui-colla-title">题目6</h2>
+                    <div class="layui-colla-content">
+                      <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title6" id = "title6" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select6" value="1" title="单选" checked>
+                              <input type="radio" name="select6" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer61" id = "answer61" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer62" id = "answer62" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer63" id = "answer63" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer64" id = "answer64" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="layui-colla-item" id = "quest7">
+                    <h2 class="layui-colla-title">题目7</h2>
+                    <div class="layui-colla-content">
+                      <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title7" id = "title7" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select7" value="1" title="单选" checked>
+                              <input type="radio" name="select7" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer71" id = "answer71" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer72" id = "answer72" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer73" id = "answer73" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer74" id = "answer74" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="layui-colla-item" id = "quest8">
+                    <h2 class="layui-colla-title">题目8</h2>
+                    <div class="layui-colla-content">
+                      <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title8" id = "title8" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select8" value="1" title="单选" checked>
+                              <input type="radio" name="select8" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer81" id = "answer81" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer82" id = "answer82" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer83" id = "answer83" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer84" id = "answer84" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="layui-colla-item" id = "quest9">
+                    <h2 class="layui-colla-title">题目9</h2>
+                    <div class="layui-colla-content">
+                      <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title9" id = "title9" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select9" value="1" title="单选" checked>
+                              <input type="radio" name="select9" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer91" id = "answer91" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer92" id = "answer92" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer93" id = "answer93" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer94" id = "answer94" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="layui-colla-item" id = "quest10">
+                    <h2 class="layui-colla-title">题目10</h2>
+                    <div class="layui-colla-content">
+                      <form class="layui-form" action="">
+                          <div class="layui-form-item">
+                            <label class="layui-form-label" >题目</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="title10" id = "title10" lay-verify="title" autocomplete="off" placeholder="请输入题目" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">单选/多选</label>
+                            <div class="layui-input-block">
+                              <input type="radio" name="select10" value="1" title="单选" checked>
+                              <input type="radio" name="select10" value="2" title="多选" >
+                            </div>
+                          </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案A</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer101" id = "answer101" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">答案B</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer102" id = "answer102" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案c</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer103" id = "answer103" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item ">
+                            <label class="layui-form-label">答案D</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="answer104" id = "answer104" lay-verify="title" autocomplete="off" placeholder="请输入答案" class="layui-input">
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+            </div>
+            <!-- <div class="layui-form-item">
+                <button type="button" class="layui-btn layui-btn-primary" id = "addQuest">添加题目</button>
+            </div> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <script>
+        layui.use(['element', 'layer','form'], function(){
+          var element = layui.element;
+          var layer = layui.layer;
+          var form = layui.form;
+          var $ = layui.$;
+
+          function isBlack(data){
+              if(data == null || data == undefined || data == ''){
+                return true;
+              }else{
+                  return false;
+              }
+          }
+
+          var questNum;
+          $("#sureBtn").on("click",function(){
+              questNum = $("#questionNum").val();
+              if(questNum > 10 || questNum <= 0){
+                layer.msg('问卷题目限制十个以内',{icon:0,shadow:0.6,time:3000});
+              }else{
+                for(var i = 1; i <= questNum; i++){
+                  $("#quest"+i).show();
+              }
+              }
+              
+          });
+
+            function dateFormat(fmt, date) {
+                    let ret;
+                    const opt = {
+                        "Y+": date.getFullYear().toString(),        // 年
+                        "m+": (date.getMonth() + 1).toString(),     // 月
+                        "d+": date.getDate().toString(),            // 日
+                        "H+": date.getHours().toString(),           // 时
+                        "M+": date.getMinutes().toString(),         // 分
+                        "S+": date.getSeconds().toString()          // 秒
+                        // 有其他格式化字符需求可以继续添加，必须转化成字符串
+                    };
+                    for (let k in opt) {
+                        ret = new RegExp("(" + k + ")").exec(fmt);
+                        if (ret) {
+                            fmt = fmt.replace(ret[1], (ret[1].length == 1) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+                        };
+                    };
+                    return fmt;
+                }
+
+              var date = new Date();
+              let questionId = dateFormat("YYYYmmddHHMMSS",date);
+
+          var data = [];
+          $("#createQuestion").on("click",function(){
+              var flag = true;
+              for(var i = 1; i <= questNum; i++){
+                  var question = new Object();
+                  question.questionNumber = i + '';
+                  question.titile = $("#title"+i).val();
+                  question.isMoreSelect = $('input[name="select'+i+'"]:checked ').val();
+                  question.answerA = $("#answer"+i+"1").val();
+                  question.answerB = $("#answer"+i+"2").val();
+                  question.answerC = $("#answer"+i+"3").val();
+                  question.answerD = $("#answer"+i+"4").val();
+                  question.questionId = questionId;
+                  data.push(question);
+                  var num = 0;
+                  if(isBlack(question.answerA)) num++;
+                  if(isBlack(question.answerB)) num++;
+                  if(isBlack(question.answerC)) num++;
+                  if(isBlack(question.answerD)) num++;
+                  if(num > 2 || isBlack(question.titile)){
+                      flag = false;
+                  }
+              }
+              var json_str = JSON.stringify(data);
+
+              if(flag){
+                    $.ajax({
+                        type : 'post',
+                        contentType: "application/json;charset=UTF-8",
+                        data : json_str,
+                        dataType: 'json',
+                        url : 'http://localhost/quest/addQuest',
+                        success : function(result){
+                            if(result.code == "0"){
+                                layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+                                document.getElementById("questionNum").value ="";
+                                for(var i = 1; i <= questNum; i++){
+                                    $("#quest"+i).hide();
+                                    document.getElementById("title"+i).value ="";
+                                    document.getElementById("answer"+i+"1").value ="";
+                                    document.getElementById("answer"+i+"2").value ="";
+                                    document.getElementById("answer"+i+"3").value ="";
+                                    document.getElementById("answer"+i+"4").value ="";
+                                }
+                                layer.alert("请复制保存问卷ID："+questionId, {
+                                    skin: 'layui-layer-molv' //样式类名
+                                    ,closeBtn: 0
+                                });
+                            }else if(result.code == "-1"){
+                                layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                            }
+                        },
+                        error : function(){
+                            window.location.href = "http://localhost/error";
+
+                        }
+                    });
+              }else{
+                  layer.msg("请完善信息！");
+              }
+              return false;
+              
+          });
+
+        //   $("#addQuest").on("click",function(){
+        //     $("#addQuest")
+        //   });
+            // function creatCode(){
+            //     for(var i = 1; i <= 10; i++){
+            //         // var div1 = document.createElement("div");
+            //         // div1.setAttribute('class','layui-colla-item');
+            //         // div1.setAttribute('id','titile'+i);
+            //         // var titleh = document.createElement("h2");
+            //         // titleh.setAttribute('class','layui-colla-title');
+            //         // titleh.append('题目'+i);
+            //         // div1.appendChild(titleh);
+            //         // var div2 = document.createElement("div");
+            //         // div2.setAttribute('class','layui-colla-content');
+            //         // div1.appendChild(div2);
+            //         // var form1 = document.createElement("form");
+            //         // form1.setAttribute('class','layui-form-item');
+            //         // div2.appendChild(form1);
+                    
+
+
+
+            //     }
+            // }
+          
+          
+          //监听折叠
+          element.on('collapse(test)', function(data){
+            // layer.msg('展开状态：'+ data.show);
+          });
+        });
+        </script>
+</body>
+</html>

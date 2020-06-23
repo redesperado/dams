@@ -1,0 +1,147 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>userAuthorization</title>
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        body{background-color: rgb(219, 219, 219);}
+        .rightCard{margin-top: 20px; margin-right: 10px;height: 400px;}
+        .leftCard{background: rgb(255, 255, 255);margin-top: 20px;margin-left: 10px;height: 400px;}
+      </style>
+</head>
+<body>
+    <div class="layui-row">
+        <div class="layui-col-xs12 layui-col-md8">
+          <div class="grid-demo grid-demo-bg1 leftCard">
+            <div class="demoTable" style="padding: 10px;">
+                搜索用户名：
+                <div class="layui-inline">
+                  <input class="layui-input" name="id" id="demoReload" autocomplete="off">
+                </div>
+                <button class="layui-btn" data-type="reload">搜索</button>
+            </div>
+               
+            <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table> 
+          </div>
+        </div>
+        <div class="layui-col-xs6 layui-col-md4">
+          <div class="grid-demo">
+            <div class="layui-col-md12">
+                <div class="layui-card rightCard">
+                  <div class="layui-card-header">温馨提示</div>
+                  <div class="layui-card-body">
+                    用户授权：<br/>
+                    Admin：超级管理员，可管理登录用户信息，学生信息等，拥有最高权限。<br/>
+                    user:普通管理员，只可管理学生信息等一些基本权利。<br/><br/>
+                    查询：支持用户名模糊查询。
+                  </div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
+      <script type="text/html" id="barDemo">
+        <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a> -->
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="auth">授权</a>
+        <a class="layui-btn layui-btn-xs" lay-event="delUser">注销</a>
+    </script>
+
+      <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+      <script>
+        layui.use(['table','jquery','layer'], function(){
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.$;
+            var demoReload = $('#demoReload');
+            
+            //方法级渲染
+            table.render({
+                elem: '#LAY_table_user'
+                ,url: 'http://localhost/api/slectUserByName'
+                ,data: demoReload.val()
+                ,type: 'get'
+                ,cols: [[
+                        // { type: 'checkbox', fixed: 'left' }, 
+                        { field: 'id', title: 'ID',  sort: true ,align: 'center'}, 
+                        { field: 'userName', title: '用户名',align: 'center'}, 
+                        // { field: 'password', title: '密码'}, 
+                        { field: 'role', title: '角色',align: 'center'}, 
+                        // {field:'role', title:'角色', width:100, templet: '#switchTpl', unresize: true},
+                        // { field: 'sign', title: '签名', width: 177 }, 
+                        // { field: 'experience', title: '积分', width: 80, sort: true }, 
+                        // { field: 'score', title: '评分', width: 80, sort: true }, 
+                        // { field: 'classify', title: '职业', width: 80 }, 
+                        // { field: 'wealth', title: '财富', width: 135, sort: true }, 
+                        { fixed: 'right', align: 'center', toolbar: '#barDemo' }
+                ]]
+                ,id: 'testReload'
+                ,page: true
+                ,height: 310
+            });
+            //监听 行 工具事件
+            table.on('tool(user)', function(obj) { //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                    var data = obj.data ,//获得当前行数据
+                        layEvent = obj.event; //获得 lay-event 对应的值
+                    var userInfo = '';
+                    userInfo = '账号：'+data.userName+' \n密码：'+data.password;
+                    var userId  =  data.id;
+                    if(layEvent === 'auth') {
+                        window.userId= userId;
+                        layer.open({
+                          type: 1,
+                          skin: 'layui-layer-rim', //加上边框
+                          area: ['500px', '200px'], //宽高
+                          content: '<iframe scrolling="auto" frameborder="0" src="authorization" style="width:100%;height:99%;"></iframe>'
+                          // success:function (userId) {
+                          //         var iframe = window['iframe'];
+                          //         iframe.child(userId);
+                          // }
+                        });
+                    }else if(layEvent === 'delUser'){
+                      layer.confirm('确定注销该用户？', function(index){
+                          // setTimeout(function(){
+                              
+                          // },'3000')
+                          //向服务端发送删除指令
+                          $.post('http://localhost/api/deleteUserById?id='+userId , function(result){
+                              if(result.code == "0"){
+                                  parent.layer.msg(result.msg,{icon:1,shadow:0.6,time:3000});
+                                  obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                                  layer.close(index);
+                              }else if(result.code == "-1"){
+                                  parent.layer.msg(result.msg,{icon:2,shadow:0.6,time:3000});
+                              }
+                              return false;
+                          });
+                      });
+                    }
+                });
+            
+            active = {
+                reload: function(){
+                var demoReload = $('#demoReload');
+                
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                    curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                      userName: demoReload.val()
+                    }
+                }, 'data');
+                }
+            };
+            
+            $('.demoTable .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+
+        </script>
+</body>
+</html>

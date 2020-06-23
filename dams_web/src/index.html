@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+</head>
+<body>
+<div class="table-responsive">
+    <table class="table" id="myTable">
+        <th></th>
+        <tr><td>id</td><td>username</td><td>password</td><td>role</td></tr>
+    </table>
+</div>
+<script src="js/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        $.ajax({
+            // url:'http://localhost:8080/api/users',
+            url:'http://localhost/api/users',
+            type:'get',
+            async:true,
+            dataType: 'json',
+            //crossDomain: true,
+            success:function(data){
+                console.log(data);
+                for(var i=0;i<data.length;i++){
+                    $('#myTable').append('<tr><td>'+data[i].id+'</td><td>'+data[i].userName+'</td><td>'+data[i].password+'</td><td>'+data[i].role+'</td></tr>');
+                }
+                //$('#myTable').append
+            },
+            error:function(data){
+                console.log(data);
+                //console.log(data[0].id);
+
+            }
+        })
+    });
+</script>
+</body>
+
+
+
+
+</html>

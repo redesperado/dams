@@ -1,0 +1,107 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>宿舍分配管理系统</title>
+    <!-- <link href="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/css/layui.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="layui/css/layui.css">
+     <!-- Bootstrap 核心 CSS 文件 -->  
+     <link href="http://apps.bdimg.com/libs/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet">
+     <!-- 在bootstrap.min.js 之前引入 -->  
+     <script src="http://apps.bdimg.com/libs/jquery/2.0.0/jquery.min.js"></script>  
+     <!-- Bootstrap 核心 JavaScript 文件 -->  
+     <script src="http://apps.bdimg.com/libs/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+     <!--引入JS的Cookie-->
+     <script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.js"></script>  
+    
+    <style type="text/css">
+        .head_navigation{height: 60px;}
+        #titleInfo{margin-left: 1%;margin-top: 15px;font-size: 20px;}
+        #fancybox-frame{margin-top: 15px; margin-left: 60%; height: 25px;}
+
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="head_navigation layui-row layui-bg-black layui-header">
+        
+            <p class="layui-inline pull-left" id = "titleInfo">宿舍分配管理系统</p>
+
+            <ul class="layui-nav layui-layout-right layui-inline">
+                <li class="layui-nav-item myInfo">
+                  <a href=""><i class="layui-icon layui-icon-user " style="font-size: 15px; color: #1E9FFF;"></i>我</a>
+                  <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" id = "modifyPwd">修改密码</a></dd>
+                    <dd><a href="javascript:;" id = "loginOut"><span class="glyphicon glyphicon-log-out"></span>退出</a></dd>
+                  </dl>
+                </li>
+              </ul>
+        </div>
+        
+        <div class="leftNavigation layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+
+                    <li class="layui-nav-item">
+                        <a href="javascript:;" data-id="1" data-title="首页" data-url="firstPage" class="site-demo-active" data-type="tabAdd">首页</a>
+                    </li>
+                    <li class="layui-nav-item adminLi" >
+                        <a href="javascript:;">用户信息管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data-id="2" data-title="用户列表" data-url="userInfo" class="site-demo-active" data-type="tabAdd">用户列表</a></dd>
+                            <dd><a href="javascript:;" data-id="3" data-title="用户授权" data-url="userAuthorization" class="site-demo-active" data-type="tabAdd">用户授权</a></dd>
+                     </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">学生信息管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data-id="4" data-title="学生信息" data-url="stuInfo" class="site-demo-active" data-type="tabAdd">学生信息</a></dd>
+                            <dd><a href="javascript:;" data-id="5" data-title="学生查询" data-url="stuSelect" class="site-demo-active" data-type="tabAdd">学生查询</a></dd>
+                            <dd><a href="javascript:;" data-id="6" data-title="学生信息导入" data-url="stuImport" class="site-demo-active" data-type="tabAdd">学生信息导入</a></dd>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">宿舍信息管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data-id="7" data-title="宿舍查询" data-url="dormInfo" class="site-demo-active" data-type="tabAdd">宿舍查询</a></dd>
+                            <dd><a href="javascript:;" data-id="8" data-title="宿舍信息导入" data-url="dormImport" class="site-demo-active" data-type="tabAdd">宿舍信息导入</a></dd>
+                    </li>
+                    <li class="layui-nav-item adminLi" >
+                        <a href="javascript:;"><span >问卷信息管理</span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data-id="9" data-title="创建问卷" data-url="question" class="site-demo-active" data-type="tabAdd"><span >创建问卷</span></a></dd>
+                            <dd><a href="javascript:;" data-id="10" data-title="问卷发布" data-url="releaseQuest" class="site-demo-active" data-type="tabAdd"><span >问卷发布</span></a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item adminLi">
+                        <a href="javascript:;"><span >宿舍分配</span></a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;" data-id="11" data-title="宿舍分配" data-url="dorAllocation" class="site-demo-active" data-type="tabAdd"><span >宿舍分配</span></a></dd>
+                        </dl>
+                    </li>
+
+                </ul>
+        
+            </div>
+            
+        </div>
+
+        <!--tab标签-->
+        <div class="layui-tab" lay-filter="demo" lay-allowclose="true" style="margin-left: 200px;">
+            <ul class="layui-tab-title"></ul>
+            <div class="layui-tab-content"></div>
+        </div>
+
+        <div class="layui-footer" style="text-align:center;">
+            <!-- 底部固定区域 -->
+            宿舍分配管理平台
+            <span class="pull-right" id="timenow"></span>
+        </div>
+    </div>
+
+    <!-- <script src="https://heerey525.github.io/layui-v2.4.3/layui-v2.4.5/layui.js"></script> -->
+    <script type="text/javascript" src="layui/layui.js"></script>
+    <script src="main.js" type="text/javascript"></script>
+    
+</body>
+</html>
