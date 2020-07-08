@@ -14,4 +14,8 @@ __中间技术：__
 Node.js
 
 
-项目使用了Node.js技术，实现前后端分离，启动项目，要后台和前端Node.js都启动才可以。
+项目使用了Node.js技术，实现前后端分离，启动项目，要后台和前端Node.js都启动
+
+用户登录url：http://localhost/login.html
+
+学生登录url：http://localhost/stuLogin
