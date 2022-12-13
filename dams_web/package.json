@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "http-proxy-middleware": "^1.0.3",
     "jquery": "^3.5.0",
     "layui-src": "^2.5.5"
